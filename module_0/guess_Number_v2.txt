@@ -1,0 +1,28 @@
+# Version1.1
+# Определяем статистическое среднее количества попыток угадывания числа в диапазоне от 1 до 100
+# Количество угадываний также 10, достигается за счет оптимизации ширины интервала для генерации случайного шага в сторону угадываемого числа
+import numpy as np
+
+def game_core_v2(number):
+ count = 1
+ predict = np.random.randint(1,101)
+ while number != predict:
+        count+=1
+        if number > predict: 
+            predict += np.random.randint(1,80/count) # в этой версии кода шаг генерируется случайно, но интервал шгенерации также сжимается пошагово
+        elif number < predict: 
+            predict -= np.random.randint(1,80/count)
+ return(count) # выход из цикла, если угадали
+        
+def score_game(game_core):
+    '''Запускаем игру 1000 раз, чтобы узнать, как быстро игра угадывает число'''
+    count_ls = []
+    np.random.seed(1)  # фиксируем RANDOM SEED, чтобы ваш эксперимент был воспроизводим!
+    random_array = np.random.randint(1,101, size=(1000))
+    for number in random_array:
+        count_ls.append(game_core(number))
+    score = int(np.mean(count_ls))
+    print(f"Ваш алгоритм угадывает число в среднем за {score} попыток")
+    return(score)
+
+score_game(game_core_v2)
